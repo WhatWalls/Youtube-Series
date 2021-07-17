@@ -1,0 +1,13 @@
+{
+    "defaults": {
+        "prefix": "c!",
+        "statusType": "PLAYING",
+        "statusMessage": "c!<Command>"
+    },
+
+    "emojis": {
+        "cross": "<:CyberStar_Crossmark:846861667878174732>",
+        "check": "<:CyberStar_Checkmark:846860623303409684>",
+        "info": "<:CyberStar_Info:847591363004596224>"
+    }
+}
