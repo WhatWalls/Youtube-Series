@@ -1,23 +1,18 @@
 const Calls = require('../database/monk');
 let config = require('../config.json')
-
+const {
+    convertChannel,
+    convertRole
+} = require("../utils/functions");
 exports.run = async (client, message, args) => {
 
     if(!message.member.permissions.has('ADMINISTRATOR')) return message.channel.send(`${config.emojis.cross} You don't have the right perms for this command`);
 
     let member = message.mentions.members.first()
 
-    const getRoleId = (id) => {
-        id = id.replace("<@&","")
-        id = id.replace(">","")
-        return id
-    }
-
-    let roleId = args[1].includes("<@&") ? getRoleId(args[1]) : args[1]
-
     try { 
 
-        let role = message.guild.roles.cache.find(role => role.id === roleId)
+        let role = convertRole(message.guild, args[1])
 
         try {
 
@@ -25,7 +20,7 @@ exports.run = async (client, message, args) => {
             message.channel.send(`${config.emojis.check}  \`${role.name}\` has been given to \`${member.user.username}\``)
 
         } catch (err) {
-
+            console.log(err)
             return message.reply(`${config.emojis.cross} Failed: Make sure my role is high enough`, true)
 
         }
@@ -41,7 +36,7 @@ exports.run = async (client, message, args) => {
 
 exports.help = {
     name: 'addRole',
-    aliases: ['addrole', 'giverole'],
+    aliases: ['addrole', 'giverole', 'promote'],
     description: 'Give a user a role.',
     usage: ''
 };

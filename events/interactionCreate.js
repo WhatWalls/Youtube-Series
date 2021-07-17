@@ -142,6 +142,15 @@ module.exports = async (client, interaction) => {
         .setEmoji('📨')
         .setStyle('PRIMARY');
 
+    let closeTicket = new Discord.MessageEmbed()
+        .setDescription('Click on the button to close the ticket')
+        .setColor("#fd5392");
+
+    let ButtonCloseTicket = new Discord.MessageButton()
+        .setCustomId('ticket_close')
+        .setLabel('Close ticket')
+        .setStyle('PRIMARY');
+
     await interaction.deferUpdate();
 
     let userId = interaction.user.id
@@ -230,85 +239,86 @@ module.exports = async (client, interaction) => {
         let data = await Calls.getData(interaction.message.guild.id)
 
         let ticketoptions = data.ticket.categories.split(',')
-        await ticketoptions.forEach(async(option) => {
-            if (option == '')return
+        await ticketoptions.forEach(async (option) => {
+            if (option == '') return
 
-            if(option == interaction.values.toString()) {
+            if (option == interaction.values.toString()) {
                 let ticketsCategoryName = `tickets`
                 let ticketChannel
-        
+
                 try {
-        
+
                     ticketChannel = await interaction.message.guild.channels.create(`${interaction.user.tag} ${option} ticket`, {
                         type: 'text'
                     })
-        
+
                 } catch (err) {
-        
+
                     console.log(err)
                     return interaction.message.channel.send(`Something went wrong with creating a ticket channel please check my roles`)
-        
+
                 }
-        
-                let parent
-        
-                const lock = async(parent) => {
+
+                const lock = async (parent) => {
                     try {
-        
+
                         await ticketChannel.setParent(parent, { lockPermissions: true })
-                        
+
                         await ticketChannel.permissionOverwrites.edit(interaction.user, {
                             VIEW_CHANNEL: true
                         });
-            
+
+                        await ticketChannel.send({ embeds: [closeTicket], components: [[ButtonCloseTicket]] })
+
                     } catch (err) {
-            
+
                         console.log(err)
                         return interaction.message.channel.send(`Something went wrong with creating a ticket category or finding one`)
-            
+
                     }
                 }
-        
+
                 try {
-        
+
                     let parent = await interaction.message.guild.channels.cache.find(c => c.name == ticketsCategoryName && c.type == "category");
-        
+
                     if (!parent) {
-        
+
                         parent = await interaction.message.guild.channels.create(ticketsCategoryName, {
                             type: 'category',
                         });
-        
+
                         await interaction.message.guild.roles.cache.forEach(role => {
-        
+
                             parent.permissionOverwrites.edit(role, {
                                 VIEW_CHANNEL: false
                             });
-        
+
                         })
 
                         let channel = convertChannel(interaction.message.guild, data.ticket.channel)
                         let infoMessage = await channel.send(`The first ticket takes a minute to create after this it will be instant`)
-                        setTimeout(function(){
+                        setTimeout(function () {
                             lock(parent)
                             try {
                                 infoMessage.delete()
                             } catch (err) {
                                 console.log(err)
-                            }},60000)
+                            }
+                        }, 60000)
 
-                        
+
                     } else {
-        
+
                         lock(parent)
-        
+
                     }
-        
+
                 } catch (err) {
-        
+
                     console.log(err)
                     return interaction.message.channel.send(`Something went wrong with creating a ticket category or finding one`)
-        
+
                 }
             }
 
@@ -394,7 +404,7 @@ module.exports = async (client, interaction) => {
                     case 'toggle':
 
                         let data = await Calls.getData(interaction.message.guild.id)
-                        if(!data.welcome.channel || !data.welcome.message) return interaction.message.channel.send(`Please setup the function before proceeding`)
+                        if (!data.welcome.channel || !data.welcome.message) return interaction.message.channel.send(`Please setup the function before proceeding`)
                         let toggle = data.welcome.toggle ? false : true
                         await Calls.updateDbSetting(interaction.message.guild.id, `welcome.${interactionCategory[1]}`, toggle)
                         let status = toggle ? 'enabled' : 'disabled'
@@ -472,7 +482,7 @@ module.exports = async (client, interaction) => {
                     case 'toggle':
 
                         let data = await Calls.getData(interaction.message.guild.id)
-                        if(!data.leave.channel || !data.leave.message) return interaction.message.channel.send(`Please setup the function before proceeding`)
+                        if (!data.leave.channel || !data.leave.message) return interaction.message.channel.send(`Please setup the function before proceeding`)
                         let toggle = data.leave.toggle ? false : true
                         await Calls.updateDbSetting(interaction.message.guild.id, `leave.${interactionCategory[1]}`, toggle)
                         let status = toggle ? 'enabled' : 'disabled'
@@ -524,7 +534,7 @@ module.exports = async (client, interaction) => {
                     case 'toggle':
 
                         let data = await Calls.getData(interaction.message.guild.id)
-                        if(!data.suggestion.channel) return interaction.message.channel.send(`Please setup the function before proceeding`)
+                        if (!data.suggestion.channel) return interaction.message.channel.send(`Please setup the function before proceeding`)
                         let toggle = data.autorole.toggle ? false : true
                         await Calls.updateDbSetting(interaction.message.guild.id, `autorole.${interactionCategory[1]}`, toggle)
                         let status = toggle ? 'enabled' : 'disabled'
@@ -616,7 +626,7 @@ module.exports = async (client, interaction) => {
                     case 'toggle':
 
                         let data = await Calls.getData(interaction.message.guild.id)
-                        if(!data.suggestion.channel) return interaction.message.channel.send(`Please setup the function before proceeding`)
+                        if (!data.suggestion.channel) return interaction.message.channel.send(`Please setup the function before proceeding`)
                         let toggle = data.autorole.toggle ? false : true
                         await Calls.updateDbSetting(interaction.message.guild.id, `suggestion.${interactionCategory[1]}`, toggle)
                         let status = toggle ? 'enabled' : 'disabled'
@@ -696,7 +706,7 @@ module.exports = async (client, interaction) => {
                     case 'toggle':
 
                         let data = await Calls.getData(interaction.message.guild.id)
-                        if(!data.filter.words) return interaction.message.channel.send(`Please setup the function before proceeding`)
+                        if (!data.filter.words) return interaction.message.channel.send(`Please setup the function before proceeding`)
                         let toggle = data.filter.toggle ? false : true
                         await Calls.updateDbSetting(interaction.message.guild.id, `filter.${interactionCategory[1]}`, toggle)
                         let status = toggle ? 'enabled' : 'disabled'
@@ -743,34 +753,34 @@ module.exports = async (client, interaction) => {
 
                         break;
 
-                        case 'logchannel':
+                    case 'logchannel':
 
-                            try {
-                                waitingForInput = await interaction.message.channel.send("Waiting for input...")
-                                input = await interaction.message.channel.awaitMessages({
-                                    filter: filter,
-                                    max: 1,
-                                    time: 60000,
-                                    errors: ["time"]
-                                });
-                                finalInput = input ? input.first() : "";
-                                let channel = convertChannel(interaction.message.guild, finalInput.content)
-                                if (!channel) return interaction.message.channel.send('Not a valid channel supplied')
-                                else await Calls.updateDbSetting(interaction.message.guild.id, `ticket.${interactionCategory[1]}`, channel.id)
-                                await interaction.message.channel.send(`Ticket Log channel has set to the channel \`${channel.id}\``)
-                                waitingForInput.delete()
-                            } catch (err) {
-                                let noInput = await interaction.message.channel.send('No valid input given')
-                                waitingForInput.delete()
-                                setTimeout(function () {
-                                    try {
-                                        noInput.delete()
-                                    } catch { }
-                                }, 10000)
-                                return;
-                            }
-    
-                            break;
+                        try {
+                            waitingForInput = await interaction.message.channel.send("Waiting for input...")
+                            input = await interaction.message.channel.awaitMessages({
+                                filter: filter,
+                                max: 1,
+                                time: 60000,
+                                errors: ["time"]
+                            });
+                            finalInput = input ? input.first() : "";
+                            let channel = convertChannel(interaction.message.guild, finalInput.content)
+                            if (!channel) return interaction.message.channel.send('Not a valid channel supplied')
+                            else await Calls.updateDbSetting(interaction.message.guild.id, `ticket.${interactionCategory[1]}`, channel.id)
+                            await interaction.message.channel.send(`Ticket Log channel has set to the channel \`${channel.id}\``)
+                            waitingForInput.delete()
+                        } catch (err) {
+                            let noInput = await interaction.message.channel.send('No valid input given')
+                            waitingForInput.delete()
+                            setTimeout(function () {
+                                try {
+                                    noInput.delete()
+                                } catch { }
+                            }, 10000)
+                            return;
+                        }
+
+                        break;
 
                     case "addcategory":
                         try {
@@ -822,7 +832,7 @@ module.exports = async (client, interaction) => {
                         try {
                             let message
                             let data = await Calls.getData(interaction.message.guild.id)
-                            if(!data.ticket.channel || !data.ticket.logchannel) return interaction.message.channel.send(`Please setup the function before proceeding`)
+                            if (!data.ticket.channel || !data.ticket.logchannel) return interaction.message.channel.send(`Please setup the function before proceeding`)
                             let toggle = data.ticket.toggle ? false : true
                             let channel = convertChannel(interaction.message.guild, data.ticket.channel)
                             if (!channel) return interaction.message.channel.send('Update the ticket channel first')
@@ -843,7 +853,7 @@ module.exports = async (client, interaction) => {
                                     let categories = []
                                     let optionArray = data.ticket.categories.split(',')
                                     await optionArray.forEach((category) => {
-                                        if (category == '')return
+                                        if (category == '') return
 
                                         categories.push({
                                             label: category,
@@ -874,6 +884,58 @@ module.exports = async (client, interaction) => {
                             return console.log(err)
                         }
                         break;
+
+                    case "close": {
+                        try {
+                            let data = await Calls.getData(interaction.message.guild.id)
+                            let channel = convertChannel(interaction.message.guild, data.ticket.logchannel)
+                            if (!channel) return interaction.message.channel.send(`Couldn't close the ticket no log channel set`)
+                            else {
+
+                                const logEmbed = new Discord.MessageEmbed()
+                                    .setColor("#fd5392")
+                                    .setAuthor(`Ticket Closed by ${interaction.member.user.tag}`, interaction.member.user.displayAvatarURL())
+                                    .setDescription([
+                                        `*View the ticket log transcript below*\n`,
+                                        `**Ticket:** ${interaction.message.channel.name}`].join('\n'))
+                                    .setTimestamp()
+
+                                let msgs = await interaction.message.channel.messages.fetch({
+                                    limit: 100
+                                })
+                                let txt = '';
+
+                                msgs = msgs.sort((a, b) => a.createdTimestamp - b.createdTimestamp);
+                                txt += `##################################################################\n`;
+                                txt += `####                                                          ####\n`;
+                                txt += `####           ${interaction.message.channel.name}                    ####\n`;
+                                txt += `####                                                          ####\n`;
+                                txt += `##################################################################\n\n`;
+
+
+                                msgs.forEach(msg => {
+                                    if (msg.content) {
+
+                                        txt += `${msg.author.tag}\n`;
+                                        txt += `${msg.content}\n`;
+                                        txt += `\n`;
+                                    }
+                                });
+
+                                interaction.message.channel.send(`Closing ticket in 5 seconds`)
+
+                                channel.send({embeds:[logEmbed]})
+
+                                let log = new Discord.MessageAttachment(Buffer.from(txt), `${interaction.message.channel.name}.txt`)
+
+                                channel.send({files:[log]});
+
+                                setTimeout(function () { interaction.message.channel.delete() }, 5000)
+                            }
+                        } catch (err) {
+                            console.log(err)
+                        }
+                    }
 
 
                 }
