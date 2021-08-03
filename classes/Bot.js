@@ -1,7 +1,6 @@
 const { Client: DiscordClient, Collection } = require('discord.js');
 const path = require('path');
 const fs = require('fs').promises;
-const client = require('discord.js')
 
 class Bot extends DiscordClient {
     constructor() {

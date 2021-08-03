@@ -1,18 +1,31 @@
-let config = require('../config.json')
+const Discord = require('discord.js')
 
 exports.run = async (client, message, args) => {
 
-    if(!message.member.permissions.has('ADMINISTRATOR')) return message.channel.send(`${config.emojis.cross} You don't have the right perms for this command`);
+    let errorNotValidBan = new Discord.MessageEmbed()
+    .setDescription(`${client.config.emojis.cross} Failed: No valid member mentioned`)
+    .setColor(client.color)
+    
+    if(!message.member.permissions.has('ADMINISTRATOR')) return message.channel.send(`${client.config.emojis.cross} You don't have the right perms for this command`);
 
     const member = message.mentions.members.first()
 
-    if (!member) return message.channel.send(`No valid member mentioned`)
+    if (!member) return message.channel.send({embeds:[errorNotValidBan]})
 
     try {
         await member.ban()
-        message.channel.send(`\`${member.user.username}\` has been banned`)
+
+        let userBannedEmbed = new Discord.MessageEmbed()
+        .setDescription(`${client.config.emojis.check} \`${member.user.username}\` has been banned`)
+        .setColor(client.color)
+
+        message.channel.send({embeds:[userBannedEmbed]})
     } catch (err) {
-        message.channel.send(`I couldn't ban \`${member.user.username}\` member`)
+
+        let userNotBannedEmbed = new Discord.MessageEmbed()
+        .setDescription(`${client.config.emojis.cross} I couldn't ban \`${member.user.username}\` member`)
+        .setColor(client.color)
+        return message.channel.send({embeds:[userNotBannedEmbed]})
     }
 }
 

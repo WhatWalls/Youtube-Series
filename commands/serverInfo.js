@@ -8,7 +8,7 @@ exports.run = async (client, message, args) => {
         .setTitle(`${guild.name}'s server info!`)
         .setDescription(` ❯ Server Region: \`${guild.region}\` \n  ❯ Member Count: \`${guild.memberCount}\`  \n  ❯ Afk Timer: \`${guild.afkTimeout}\` \n  ❯ Verification Level: \`${guild.verificationLevel}\`\n  ❯ MessageNotifications: \`${guild.defaultMessageNotifications}\` \n ❯ Server Owner: \`${guild.owner}\` \n ❯ Guild Creation: \`${guild.createdAt}\` `)
         .setFooter(message.guild.name, message.guild.iconURL())
-        .setColor("#fd5392")
+        .setColor(client.color)
         .setTimestamp()
     message.channel.send({ embeds: [serverEmbed]});
 };

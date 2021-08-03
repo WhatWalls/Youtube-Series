@@ -2,7 +2,6 @@ const { Collection, MessageAttachment, MessageEmbed, User } = require('discord.j
 
 const ms = require('pretty-ms');
 let config = require('../config.json');
-const Calls = require('../database/monk');
 const {
     checkFilter
 } = require("../utils/functions");
@@ -22,12 +21,37 @@ const cooldowns = new Collection();
  */
 module.exports = async (client, message) => {
 
+    const {
+        convertChannel,
+        convertCategory,
+        convertRole,
+    } = require(`${process.cwd()}/utils/functions`);
+    const Calls = require(`${process.cwd()}/database/monk`);
+    
+    //CLIENT VARIABLES
+    client.config = require(`${process.cwd()}/config.json`);
+    client.prefix = client.config.defaults.prefix
+    client.calls = Calls
+    client.ms = require('ms');
+    client.convertChannel = convertChannel;
+    client.convertCategory = convertCategory;
+    client.convertRole = convertRole;
+
+    let data = await client.calls.getData(message.guild.id)
+
+    if (data.customizations.embedcolor) {
+        client.color = data.customizations.embedcolor
+    } else {
+        client.color = "#fd5392"
+    }
+
     //Filter
-    // let filter = await checkFilter(message)
-    // if (filter) {
-    //     await message.channel.bulkDelete(1, true)
-    //     return message.channel.send(`That word is not allowed to be used in this server`)
-    // }
+    let filter = await checkFilter(message)
+
+    if (filter) {
+        await message.channel.bulkDelete(1, true)
+        return message.channel.send(`That word is not allowed to be used in this server`)
+    }
     
     let prefix = config.defaults.prefix
     if (message.author.bot) return;

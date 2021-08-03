@@ -1,8 +1,8 @@
-let config = require('../config.json')
+const Discord = require('discord.js')
 
 exports.run = async (client, message, args) => {
 
-    if(!message.member.permissions.has('ADMINISTRATOR')) return message.channel.send(`${config.emojis.cross} You don't have the right perms for this command`);
+    if(!message.member.permissions.has('ADMINISTRATOR')) return message.channel.send(`${client.config.emojis.cross} You don't have the right perms for this command`);
 
     const member = message.mentions.members.first()
 
@@ -10,9 +10,17 @@ exports.run = async (client, message, args) => {
 
     try {
         await member.kick()
-        message.channel.send(`\`${member.user.username}\` has been kicked`)
+
+        let kickEmbed = new Discord.MessageEmbed()
+        .setDescription(`${client.config.emojis.check} \`${member.user.username}\` has been kicked`)
+        .setColor(client.color)
+        message.channel.send({embeds:[kickEmbed]})
+
     } catch (err) {
-        message.channel.send(`I couldn't kick \`${member.user.username}\` member`)
+        let kickErrorEmbed = new Discord.MessageEmbed()
+        .setDescription(`${client.config.emojis.cross} I couldn't kick \`${member.user.username}\` member`)
+        .setColor(client.color)
+        message.channel.send({embeds:[kickErrorEmbed]})
     }
 }
 

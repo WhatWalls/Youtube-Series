@@ -9,5 +9,9 @@
         "cross": "<:CyberStar_Crossmark:846861667878174732>",
         "check": "<:CyberStar_Checkmark:846860623303409684>",
         "info": "<:CyberStar_Info:847591363004596224>"
+    },
+
+    "hyperlinks": {
+        "link" : "[Support Server](https://discord.gg/5ZDFj2bgn6) | [Invite Link](https://discord.com/api/oauth2/authorize?client_id=841316662703947826&permissions=8&scope=bot)"
     }
 }

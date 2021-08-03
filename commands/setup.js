@@ -1,6 +1,4 @@
-const Calls = require('../database/monk');
 const Discord = require("discord.js")
-let config = require('../config.json')
 
 exports.run = async (client, message, args) => {
 
@@ -46,6 +44,21 @@ exports.run = async (client, message, args) => {
                 value: 'setup_ticket',
                 emoji: '📨',
                 description: 'Setup the ticket features',
+            }, {
+                label: 'Application',
+                value: 'setup_application',
+                emoji: '📝',
+                description: 'Setup the application features',
+            }, {
+                label: 'Capcha Features',
+                value: 'setup_verification',
+                emoji: '🔐',
+                description: 'Setup the capcha / verification features',
+            }, {
+                label: 'Premium Features',
+                value: 'setup_premium',
+                emoji: '✏️',
+                description: 'Setup the premium features',
             },
 
         ),
@@ -54,7 +67,7 @@ exports.run = async (client, message, args) => {
     setupEmbed = new Discord.MessageEmbed()
     setupEmbed
             .setDescription('Setup the bot to your wishes')
-            .setColor("#fd5392")
+            .setColor(client.color)
     message.channel.send({embeds:[setupEmbed], components:[Selection]})
 
 };

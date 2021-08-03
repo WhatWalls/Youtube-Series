@@ -13,6 +13,7 @@ class Calls {
         const collection = db.get('guilds')
         return (await collection.insert({
             guild_id: id,
+            premium: false,
             welcome: {
                 channel: '',
                 message: '',
@@ -39,7 +40,7 @@ class Calls {
                 toggle: false
             },
             customizations: {
-                embedcolor: '#808080'
+                embedcolor: '',
             },
             mute: {
                 role: ''
@@ -48,6 +49,21 @@ class Calls {
                 words: '',
                 toggle: false
             },
+            application: {
+                accept: '',
+                deny: '',
+                review: '',
+                status: '',
+                vote: '',
+                votech: '',
+                questions: '',
+                toggle: false
+            },
+            verification: {
+                role: '',
+                channel: '',
+                toggle: false
+            }
             
         }))
     }

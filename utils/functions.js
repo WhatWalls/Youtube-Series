@@ -9,6 +9,11 @@ module.exports = {
         if (channel) return channel;
         else return false;
     },
+    convertCategory(guild, category) {
+        category = guild.channels.cache.find(c => c.id == category && c.type == "category")
+        if (category) return category;
+        else return false;
+    },
     convertRole(guild, role) {
         role = role.replace("<@&","")
         role = role.replace(">","")    
@@ -22,15 +27,23 @@ module.exports = {
         else return false
     },
     async checkFilter (message) {
+
         if (message.author.bot) return false
         let data = await Calls.getData(message.guild.id)
+        if (!data.filter.toggle) return false
         let words = data.filter.words
         let args = message.content.split(" ");
-        let inFilter = false
-        args.forEach((arg) => {
-            if (words.includes(arg.toLowerCase()+',')) inFilter = true            
+        let infilter = false
+        words = words.split(",")
+
+        words.forEach((word) => {
+            args.forEach((arg) => {
+                if (arg.toLowerCase() == word.toLowerCase()) infilter = true;
+                if (arg.toLowerCase() == word.toLowerCase()+ `s`) infilter = true;            
+            })
         })
-        return inFilter
+
+        return infilter
     }
 
     

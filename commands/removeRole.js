@@ -1,43 +1,44 @@
-const Calls = require('../database/monk');
-let config = require('../config.json')
+const Discord = require('discord.js')
 
 exports.run = async (client, message, args) => {
 
-    if(!message.member.permissions.has('ADMINISTRATOR')) return message.channel.send(`${config.emojis.cross} You don't have the right perms for this command`);
+    if(!message.member.permissions.has('ADMINISTRATOR')) return message.channel.send(`${client.config.emojis.cross} You don't have the right perms for this command`);
 
     let member = message.mentions.members.first()
 
-    const getRoleId = (id) => {
-        id = id.replace("<@&","")
-        id = id.replace(">","")
-        return id
-    }
-
-    let roleId = args[1].includes("<@&") ? getRoleId(args[1]) : args[1]
-
-    try {
-
-        let role = message.guild.roles.cache.find(role => role.id === roleId)
+    try { 
+        
+        let role = client.convertRole(message.guild, args[1])
 
         try {
 
             await member.roles.remove(role)
-            message.channel.send(`${config.emojis.check} \`${role.name}\` has been taken from \`${member.user.username}\``)
+            let roleGivenEmbed = new Discord.MessageEmbed()
+            .setDescription(`${client.config.emojis.check}  \`${role.name}\` has been taken from \`${member.user.username}\``)
+            .setColor(client.color)
+            return message.channel.send({embeds:[roleGivenEmbed]})
 
         } catch (err) {
-
-            return message.reply(`${config.emojis.cross} Failed: Make sure my role is high enough`, true)
+            console.log(err)
+            let errorEmbed = new Discord.MessageEmbed()
+            .setDescription(`${client.config.emojis.cross} Failed: Make sure my role is high enough`)
+            .setColor(client.color)
+            return message.channel.send({embeds:[errorEmbed]})
 
         }
 
 
     } catch (err) {
-
-        return message.reply(`${config.emojis.cross} Failed: Make sure you supply a valid role`, true)
+        console.log(err)
+        let errorEmbed = new Discord.MessageEmbed()
+        .setDescription(`${client.config.emojis.cross} Failed: Make sure you supply a valid role`)
+        .setColor(client.color)
+        return message.channel.send({embeds:[errorEmbed]})
 
     }
 
 };
+
 
 exports.help = {
     name: 'removeRole',

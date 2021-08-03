@@ -1,9 +1,4 @@
 const Discord = require('discord.js')
-const Calls = require('../database/monk')
-const {
-    convertChannel,
-    convertRole
-} = require("../utils/functions");
 
 exports.run = async (client, message, args) => {
 
@@ -17,10 +12,24 @@ exports.run = async (client, message, args) => {
     .setLabel('Deny')
     .setStyle('DANGER');
 
-    let data = await Calls.getData(message.guild.id)
-    if (!data.suggestion.toggle) return message.channel.send(`Suggestions are not enabled`)
-    let channel = convertChannel(message.guild, data.suggestion.channel)
-    if (!channel) return message.channel.send(`No channel has been set`)
+    let notEnabledSuggestionEmbed = new Discord.MessageEmbed()
+    .setDescription(`${client.config.emojis.cross} Suggestions are not enabled`)
+    .setColor(client.color)
+
+    let noSuggestionChannelEmbed = new Discord.MessageEmbed()
+    .setDescription(`${client.config.emojis.cross} No channel has been set`)
+    .setColor(client.color)
+
+    let data = await client.calls.getData(message.guild.id)
+    if (!data.suggestion.toggle) return message.channel.send({embeds:[notEnabledSuggestionEmbed]})
+    let channel = client.convertChannel(message.guild, data.suggestion.channel)
+    if (!channel) return message.channel.send({embeds:[noSuggestionChannelEmbed]})
+
+    let errorSuggestionEmbed = new Discord.MessageEmbed()
+    .setDescription(`${client.config.emojis.cross} Make sure to give a suggestion`)
+    .setColor(client.color)
+
+    if(!args[0]) return message.channel.send({embeds:[errorSuggestionEmbed]})
 
     let suggestionEmbed = new Discord.MessageEmbed()
     .setAuthor(`${message.author.username}'s suggestion`, message.author.displayAvatarURL())

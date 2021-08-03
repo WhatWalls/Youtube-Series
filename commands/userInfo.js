@@ -11,7 +11,7 @@ exports.run = async (client, message, args) => {
     .setThumbnail(User.displayAvatarURL())
     .setDescription(`UserName: \`${User.username}\` \n UserDiscriminator: \`${User.discriminator}\` \n Userid: \`${User.id}\` \n Bot: \`${User.bot}\``)
     .setFooter(User.username, User.displayAvatarURL())
-    .setColor("#fd5392")
+    .setColor(client.color)
     .setTimestamp()
     message.channel.send({embeds:[userInfo]});
     

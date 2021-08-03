@@ -1,12 +1,16 @@
-let config = require('../config.json')
 const Discord = require('discord.js')
 
 exports.run = async (client, message, args) => {
 
-    if(!message.member.permissions.has('ADMINISTRATOR')) return message.channel.send(`${config.emojis.cross} You don't have the right perms for this command`);
+    let notEnoughUserEmbed = new Discord.MessageEmbed()
+    .setDescription(`${client.config.emojis.cross} There aren't any users banned in this guild`)
+    .setColor(client.color)
+
+    if(!message.member.permissions.has('ADMINISTRATOR')) return message.channel.send(`${client.config.emojis.cross} You don't have the right perms for this command`);
 
     let bans = await message.guild.bans.fetch()
-    if (bans.size == 0) return message.channel.send(`There aren't any users banned in this guild`)
+
+    if (bans.size == 0) return message.channel.send({embeds:[notEnoughUserEmbed]})
     let arrayBans = ''
     bans.forEach((bannedUser) => {
         arrayBans += `${bannedUser.user.username} (${bannedUser.user.id}) \n`
@@ -25,7 +29,7 @@ exports.run = async (client, message, args) => {
 
 exports.help = {
     name: 'banList',
-    aliases: ['banlist'],
+    aliases: ['banlist', 'blist'],
     description: 'Get a ban list.',
     usage: ''
 };

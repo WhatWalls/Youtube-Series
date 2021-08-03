@@ -1,12 +1,10 @@
 const Discord = require('discord.js')
-const { convertChannel, convertRole } = require("../utils/functions");
-let config = require('../config.json')
 
 exports.run = async (client, message, args) => {
 
     try {
 
-        let role = convertRole(message.guild, args[0])
+        let role = client.convertRole(message.guild, args[0])
 
         console.log(role)
 
@@ -15,14 +13,17 @@ exports.run = async (client, message, args) => {
             .setTitle(`${role.name} info`)
             .setDescription(`❯ Members with role: \`${role.members.size}\` \n❯ Roleid: \`${role.id}\` \n❯ RGB role color: \`${role.color}\` \n❯ Mentionable: \`${role.mentionable}\``)
             .setFooter(message.guild.name, message.guild.iconURL())
-            .setColor("#fd5392")
+            .setColor(client.color)
             .setTimestamp()
         message.channel.send({ embeds: [roleEmbed]});
         
     } catch (err) {
 
-        return message.reply(`${config.emojis.cross} Failed: Make sure you supply a valid role`, true)
-
+        let notValidRoleEmbed = new Discord.MessageEmbed()
+        .setDescription(`${client.config.emojis.cross} Failed: Make sure you supply a valid role`)
+        .setColor(client.color)
+        return message.channel.send({embeds:[notValidRoleEmbed]})
+        
     }
 };
 

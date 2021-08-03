@@ -1,4 +1,4 @@
-let config = require('../config.json')
+const Discord = require('discord.js')
 
 exports.run = async (client, message, args) => {
 
@@ -10,7 +10,10 @@ exports.run = async (client, message, args) => {
 
     // }
 
-    message.channel.send(`Server is out of lockdown mode`)
+    let unlockdownEmbed = new Discord.MessageEmbed()
+    .setDescription(`${client.config.emojis.check} Server is out of lockdown mode`)
+    .setColor(client.color)
+    message.channel.send({embeds:[unlockdownEmbed]})
 }
 
 exports.help = {

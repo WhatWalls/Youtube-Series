@@ -9,7 +9,7 @@ exports.run = async (client, message, args) => {
     .setTitle(`${User.tag}'s Avatar`)
     .setImage(User.displayAvatarURL())
     .setFooter(User.username, User.displayAvatarURL())
-    .setColor("#fd5392")
+    .setColor(client.color)
     .setTimestamp()
     message.channel.send({embeds:[avatarEmbed]});
     

@@ -26,7 +26,7 @@ exports.run = async (client, message, args) => {
     .setTitle(client.user.username + " Info")
     .setDescription("❯ Guild Count: " + i.toString() + "\n❯ Bot Creator: Bacio001#2484\n❯ Creation Date: " + created+ "\n❯ Restart Date: " + restarted+ "\n❯ Uptime: " + uptime)
     .setFooter(client.user.username, client.user.displayAvatarURL())
-    .setColor("#fd5392")
+    .setColor(client.color)
     .setTimestamp()
     message.channel.send({embeds: [botInfoEmbed]});
 
