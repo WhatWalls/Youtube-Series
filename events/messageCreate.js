@@ -37,22 +37,6 @@ module.exports = async (client, message) => {
     client.convertCategory = convertCategory;
     client.convertRole = convertRole;
 
-    let data = await client.calls.getData(message.guild.id)
-
-    if (data.customizations.embedcolor) {
-        client.color = data.customizations.embedcolor
-    } else {
-        client.color = "#fd5392"
-    }
-
-    //Filter
-    let filter = await checkFilter(message)
-
-    if (filter) {
-        await message.channel.bulkDelete(1, true)
-        return message.channel.send(`That word is not allowed to be used in this server`)
-    }
-    
     let prefix = config.defaults.prefix
     if (message.author.bot) return;
     if (!message.guild) return;

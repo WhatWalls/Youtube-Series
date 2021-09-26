@@ -3,68 +3,13 @@ const db = monk(process.env.DATABASE_STRING);
 
 class Calls {
 
-    //Ticket System
-    //Suggestion System
-    //Logging system
-    //Moderation
-    //
-
     static async insertGuild(id) {
         const collection = db.get('guilds')
         return (await collection.insert({
             guild_id: id,
-            premium: false,
-            welcome: {
-                channel: '',
-                message: '',
-                toggle: false
-            },
-            leave: {
-                channel: '',
-                message: '',
-                toggle: false
-            },
-            autorole: {
-                role: '',
-                toggle: false
-            }, 
-            ticket: {
-                channel: '',
-                logchannel: '',
-                message: '',
-                categories: '',
-                toggle: false
-            },
-            suggestion: {
-                channel: '',
-                toggle: false
-            },
-            customizations: {
-                embedcolor: '',
-            },
-            mute: {
-                role: ''
-            },
-            filter: {
-                words: '',
-                toggle: false
-            },
-            application: {
-                accept: '',
-                deny: '',
-                review: '',
-                status: '',
-                vote: '',
-                votech: '',
-                questions: '',
-                toggle: false
-            },
-            verification: {
-                role: '',
-                channel: '',
-                toggle: false
+            toggle :{
+                autorole: false,
             }
-            
         }))
     }
 

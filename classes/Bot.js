@@ -13,7 +13,7 @@ class Bot extends DiscordClient {
             "GUILD_BANS",
             "GUILD_MESSAGE_REACTIONS",
             "DIRECT_MESSAGE_REACTIONS",
-            "GUILD_EMOJIS",
+            "GUILD_EMOJIS_AND_STICKERS",
             "GUILD_MESSAGE_TYPING",
             "GUILD_WEBHOOKS",
             "GUILD_INTEGRATIONS",
